@@ -1,0 +1,105 @@
+# -----------------------------------------------------------------------------
+# Python / backend
+# -----------------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg-info/
+.eggs/
+*.egg
+.pytest_cache/
+.mypy_cache/
+.pyre/
+.pytype/
+.hypothesis/
+.coverage
+.coverage.*
+htmlcov/
+
+# Ambientes virtuais
+.venv/
+venv/
+ENV/
+env/
+backend/.venv/
+backend/venv/
+backend/env/
+
+# Variáveis de ambiente e segredos
+.env
+.env.*
+!.env.example
+backend/.env
+backend/.env.*
+
+# Alembic / migrations generated artifacts
+backend/alembic/versions/*.pyc
+
+# -----------------------------------------------------------------------------
+# Flutter / frontend
+# -----------------------------------------------------------------------------
+frontend/.dart_tool/
+frontend/.idea/
+frontend/.vscode/
+frontend/build/
+frontend/.packages
+frontend/.pub-cache/
+frontend/.flutter-plugins
+frontend/.flutter-plugins-dependencies
+frontend/pubspec.lock
+frontend/.metadata
+frontend/.fvm/
+frontend/android/key.properties
+frontend/android/*.jks
+frontend/android/*.keystore
+frontend/android/app/release/
+frontend/android/app/debug/
+frontend/android/app/src/main/res/mipmap-anydpi-v26/
+
+# Dependências do Flutter / Dart
+frontend/.dart_tool/
+frontend/build/
+frontend/.pub/
+frontend/.fvm/flutter_sdk
+frontend/node_modules/
+
+# Objeto/arquivos temporários do Flutter
+frontend/**/*.iml
+frontend/**/*.log
+frontend/**/*.tmp
+frontend/**/*.temp
+
+# -----------------------------------------------------------------------------
+# Node / JS (caso o frontend tenha utilitários JS ou tooling extra)
+# -----------------------------------------------------------------------------
+node_modules/
+frontend/node_modules/
+frontend/.pnpm-store/
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+
+# -----------------------------------------------------------------------------
+# Android / iOS build outputs
+# -----------------------------------------------------------------------------
+**/android/*.jks
+**/android/*.keystore
+**/android/key.properties
+**/android/app/release/
+**/android/app/debug/
+**/ios/Pods/
+**/ios/Runner.xcworkspace/
+**/ios/Podfile.lock
+**/ios/DerivedData/
+
+# -----------------------------------------------------------------------------
+# Editor e sistema
+# -----------------------------------------------------------------------------
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo

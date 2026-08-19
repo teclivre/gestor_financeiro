@@ -1,0 +1,84 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: gestor_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: gestor_financeiro
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - app_network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: gestor_backend
+    restart: unless-stopped
+    environment:
+      ENV: production
+      DATABASE_URL: postgresql+psycopg2://postgres:postgres@db:5432/gestor_financeiro
+      SECRET_KEY: altere-esta-chave-secreta
+      ALGORITHM: HS256
+      ACCESS_TOKEN_EXPIRE_MINUTES: 1440
+      GOOGLE_CLIENT_ID: ""
+      GOOGLE_ISSUER: https://accounts.google.com
+    depends_on:
+      - db
+    ports:
+      - "8000:8000"
+    networks:
+      - app_network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: gestor_frontend
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    networks:
+      - app_network
+
+  nginx:
+    image: nginx:1.27-alpine
+    container_name: gestor_nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./certbot/www:/var/www/certbot:ro
+      - ./certbot/conf:/etc/letsencrypt:ro
+    depends_on:
+      - backend
+      - frontend
+    networks:
+      - app_network
+
+  certbot:
+    image: certbot/certbot:latest
+    container_name: gestor_certbot
+    restart: unless-stopped
+    volumes:
+      - ./certbot/www:/var/www/certbot
+      - ./certbot/conf:/etc/letsencrypt
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+    networks:
+      - app_network
+
+volumes:
+  postgres_data:
+
+networks:
+  app_network:
+    driver: bridge
