@@ -36,6 +36,12 @@ services:
       - "8000:8000"
     networks:
       - app_network
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/healthz').read()"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
 
   frontend:
     build:
@@ -44,35 +50,7 @@ services:
     container_name: gestor_frontend
     restart: unless-stopped
     ports:
-      - "8080:80"
-    networks:
-      - app_network
-
-  nginx:
-    image: nginx:1.27-alpine
-    container_name: gestor_nginx
-    restart: unless-stopped
-    ports:
       - "80:80"
-      - "443:443"
-    volumes:
-      - ./nginx/conf.d:/etc/nginx/conf.d:ro
-      - ./certbot/www:/var/www/certbot:ro
-      - ./certbot/conf:/etc/letsencrypt:ro
-    depends_on:
-      - backend
-      - frontend
-    networks:
-      - app_network
-
-  certbot:
-    image: certbot/certbot:latest
-    container_name: gestor_certbot
-    restart: unless-stopped
-    volumes:
-      - ./certbot/www:/var/www/certbot
-      - ./certbot/conf:/etc/letsencrypt
-    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
     networks:
       - app_network
 
